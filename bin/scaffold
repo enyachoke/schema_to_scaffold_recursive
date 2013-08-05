@@ -32,21 +32,15 @@ schema = SchemaToScaffold::Schema.new(data)
 begin
   raise if schema.table_names.empty?
   puts "\nLoaded tables:"
-  schema.table_names.each_with_index {|name,i|  puts "#{i}. #{name}" }
-  print "\nSelect a table: "
+  schema.table_names.each_with_index {|name,i|  puts "#{i}. #{name}" 
+script_scaffold = SchemaToScaffold.generate_script(schema, i,"scaffold")
+puts "\nScript for rails scaffold\n#{script_scaffold}" 
+system(script_scaffold+' --force')
+}
+  print "\nHave Fun Kiddo\n"
 rescue
   puts "Could not find tables in '#{path}'"
   exit 1
-end while schema.table_names[(table_id = gets.to_i)].nil?
-
-script_scaffold = SchemaToScaffold.generate_script(schema, table_id,"scaffold")
-puts "\nScript for rails scaffold\n#{script_scaffold}"
-
-script_factory_girl = SchemaToScaffold.generate_script(schema, table_id,"factory_girl:model")
-puts "\nScript for factory girl\n#{script_factory_girl}"
+end 
 
 
-if opts[:xclip]
-  puts("\n(copied to your clipboard)")
-  exec("echo '#{script}' | xclip -selection c")
-end
